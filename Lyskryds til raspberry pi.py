@@ -12,6 +12,7 @@
 #Imports
 from gpiozero import LED
 from time import sleep
+import random
 
 #Lyskryds status definitioner:
 A1red = LED(13)
@@ -65,11 +66,21 @@ def A1redA2redyellow():
     return A1redA2green()
 
 def A1redA2green():
-    A2red.off()
-    A2yellow.off()
-    A2green.on()
-    sleep(1)
-    return A1redA2yellow()
+    x=random.randrange(1,10)
+    if x == 1:
+      A1red.off()
+      A2red.off()
+      A2yellow.off()
+      A1green.on()
+      A2green.on()
+      sleep(5)
+      return A1redA2yellow()
+    else:
+      A2red.off()
+      A2yellow.off()
+      A2green.on()
+      sleep(1)
+      return A1redA2yellow()
 
 def A1redA2yellow():
     A2green.off()
