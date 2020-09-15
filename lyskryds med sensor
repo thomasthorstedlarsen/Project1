@@ -12,6 +12,7 @@
 #Imports
 from gpiozero import LED
 from time import sleep
+import RPi.GPIO as GPIO
 import random
 
 #Lyskryds status definitioner:
@@ -22,72 +23,32 @@ A2red = LED(21)
 A2yellow = LED(20)
 A2green = LED(16)
 
-
 #Start state:
 def state0():
-    return A1redA2red()
+    A1red.on()
+    A2red.on()
+    A1yellow.on()
+    A2yellow.on()
+    A1green.on()
+    A2green.on()
+    sleep(3)
+    A1red.off()
+    A2red.off()
+    A1yellow.off()
+    A2yellow.off()
+    A1green.off()
+    A2green.off()
+    sleep(3)
 
 #Lyskryds states:
 
-def A1redA2red():
-    A2yellow.off()
-    A1red.on()
-    A2red.on()
-    sleep(1)
-    return A1redyellowA2red()
+def state1():
 
-def A1redyellowA2red():
-    A1yellow.on()
-    sleep(1)
-    return A1greenA2red()
-
-def A1greenA2red():
-    A1red.off()
-    A1yellow.off()
-    A1green.on()
-    sleep(1)
-    return A1yellowA2red()
-
-def A1yellowA2red():
-    A1green.off()
-    A1yellow.on()
-    sleep(1)
-    return A1redA2red2()
-
-def A1redA2red2():
-    A1yellow.off()
-    A1red.on()
-    sleep(1)
-    return A1redA2redyellow()
-
-def A1redA2redyellow():
-    A2yellow.on()
-    sleep(1)
-    return A1redA2green()
-
-def A1redA2green():
-    x=random.randrange(1,10)
-    if x == 1:
-      A1red.off()
-      A2red.off()
-      A2yellow.off()
-      A1green.on()
-      A2green.on()
-      sleep(5)
-      return A1redA2yellow()
+    if GPIO.input(23) == 0:
+        A1red.on()
+        sleep(5)
+        return state0()
     else:
-      A2red.off()
-      A2yellow.off()
-      A2green.on()
-      sleep(1)
-      return A1redA2yellow()
-
-def A1redA2yellow():
-    A2green.off()
-    A2yellow.on()
-    sleep(1)
-    return A1redA2red()
-
-
-state=state0
-while state: state=state()
+        A1green.on()
+        sleep(5)
+        exit(0)
