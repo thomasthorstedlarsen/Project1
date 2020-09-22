@@ -1,0 +1,111 @@
+#Lyskryds states:
+#A1redA2red
+#A1redyewllowA2red
+#A1greenA2red
+#A1yellowA2red
+#A1redA2red2
+#A1redA2redyellow
+#A1redA2green
+#A1redA2yellow
+#A1redA2red
+
+#Imports
+from gpiozero import LED
+from time import sleep
+from gpiozero import Button
+from picamera import PiCamera
+from datetime import datetime
+
+#Input definition:
+#Lyskryds status definitioner:
+A1red = LED(13)
+A1yellow = LED(19)
+A1green = LED(26)
+A2red = LED(21)
+A2yellow = LED(20)
+A2green = LED(16)
+button = Button(5)
+camera = PiCamera()
+#Start state:
+def state0():
+    return A1redA2red()
+
+#Lyskryds states:
+
+def A1redA2red():
+    A2yellow.off()
+    A1red.on()
+    A2red.on()
+    button.wait_for_press(timeout=5)
+    if button.value == 1:
+        timestamp = datetime.now().isoformat()
+        camera.capture('/home/pi/Pictures/%s.jpg' % timestamp)
+        return A1redyellowA2red()
+    else:
+        return A1redyellowA2red()
+
+def A1redyellowA2red():
+    A1yellow.on()
+    button.wait_for_press(timeout=5)
+    if button.value == 1:
+        timestamp = datetime.now().isoformat()
+        camera.capture('/home/pi/Pictures/%s.jpg' % timestamp)
+        return A1greenA2red()
+    else:
+        return A1greenA2red()
+
+def A1greenA2red():
+    A1red.off()
+    A1yellow.off()
+    A1green.on()
+    button.wait_for_press(timeout=5)
+    if button.value == 1:
+        timestamp = datetime.now().isoformat()
+        camera.capture('/home/pi/Pictures/%s.jpg' % timestamp)
+        return A1yellowA2red()
+    else:
+        return A1yellowA2red()
+
+def A1yellowA2red():
+    A1green.off()
+    A1yellow.on()
+    button.wait_for_press(timeout=5)
+    if button.value == 1:
+        timestamp = datetime.now().isoformat()
+        camera.capture('/home/pi/Pictures/%s.jpg' % timestamp)
+        return A1redA2red2()
+    else:
+        return A1redA2red2()
+
+def A1redA2red2():
+    A1yellow.off()
+    A1red.on()
+    button.wait_for_press(timeout=5)
+    if button.value == 1:
+        timestamp = datetime.now().isoformat()
+        camera.capture('/home/pi/Pictures/%s.jpg' % timestamp)
+        return A1redA2redyellow()
+    else:
+        return A1redA2redyellow()
+
+def A1redA2redyellow():
+    A2yellow.on()
+    sleep(5)
+    return A1redA2green()
+
+def A1redA2green():
+    A2red.off()
+    A2yellow.off()
+    A2green.on()
+    sleep(5)
+    return A1redA2yellow()
+
+def A1redA2yellow():
+    A2green.off()
+    A2yellow.on()
+    sleep(5)
+    return A1redA2red()
+
+
+state=state0
+while state: state=state()
