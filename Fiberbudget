@@ -1,0 +1,83 @@
+import time
+
+
+def mainmenu():
+    print("Dette er et program til udregning af fiberbudget.")
+    print("Programmet startes nu..")
+    time.sleep(2)
+    print("Skal programmet udregne fiber budget i single mode eller multimode?")
+    a = int(input("""
+    Tryk 1 for SM1310nm.
+    Tryk 2 for SM1550nm.
+    Tryk 3 for at afslutte."""))
+    if a == 1:
+        return menusm1310()
+    elif a == 2:
+        return menusm1550()
+    elif a == 3:
+        return menuexit()
+    else:
+        print("Du skal taste 1, 2 eller 3!")
+        time.sleep(2)
+        return mainmenu
+
+
+def menusm1310():
+    print("Du bedes nu indtaste en række informationer.")
+    print("Vent venligst..")
+    time.sleep(2)
+    txsm1310 = float((input("Indtast dBm for SPF'ens Tx.")))
+    rxsm1310 = float((input("Indtast dBm for SPF'ens Rx.")))
+    bruttosm1310 = txsm1310 - rxsm1310
+    print("Brutto dæmpningen er:", bruttosm1310, )
+    ab = float((input("Hvor mange konnektorer er benyttet?")))
+    ac = float((input("Hvor mange splidsninger er lavet?")))
+    ad = float((input("Hvor mange KM fiber er lagt ned?")))
+    marginsm1310 = 3.5
+    a1 = (bruttosm1310 - ((ab * 0.75) + (ac * 0.3) + (ad * 0.35)) - marginsm1310)
+    if a1 > 0:
+        print('\x1b[3;30;42m' + 'Fiber budgettet er ok!' + '\x1b[0m')
+        print("Dæmpningen er:", a1, )
+        print("Om 10 sekunder sendes du tilbage til hovedmenuen.")
+        time.sleep(10)
+        return mainmenu()
+    else:
+        print('\x1b[1;30;41m' + 'Fiber budgettet er IKKE ok' + '\x1b[0m')
+        print("Dæmpningen er", a1, )
+        print("Om 10 sekunder sendes du tilbage til hovedmenuen.")
+        time.sleep(10)
+        return mainmenu()
+
+def menusm1550():
+    print("Du bedes nu indtaste en række informationer.")
+    print("Vent venligst..")
+    time.sleep(2)
+    txsm1550 = float((input("Indtast dBm for SPF'ens Tx.")))
+    rxsm1550 = float((input("Indtast dBm for SPF'ens Rx.")))
+    bruttosm1550 = txsm1550 - rxsm1550
+    print("Brutto dæmpningen er:", bruttosm1550, )
+    ab = float((input("Hvor mange konnektorer er benyttet?")))
+    ac = float((input("Hvor mange splidsninger er lavet?")))
+    ad = float((input("Hvor mange KM fiber er lagt ned?")))
+    marginsm1550 = 3.5
+    a1 = (bruttosm1550 - ((ab * 0.75) + (ac * 0.3) + (ad * 0.2)) - marginsm1550)
+    if a1 > 0:
+        print('\x1b[3;30;42m' + 'Fiber budgettet er ok!' + '\x1b[0m')
+        print("Dæmpningen er:", a1, )
+        print("Om 10 sekunder sendes du tilbage til hovedmenuen.")
+        time.sleep(10)
+        return mainmenu()
+    else:
+        print('\x1b[1;30;41m' + 'Fiber budgettet er IKKE ok' + '\x1b[0m')
+        print("Dæmpningen er", a1, )
+        print("Om 10 sekunder sendes du tilbage til hovedmenuen.")
+        time.sleep(10)
+        return mainmenu()
+
+def menuexit():
+    print("Programmet lukkes...")
+    time.sleep(2)
+    exit(0)
+
+state = mainmenu()
+while state: state = state()
